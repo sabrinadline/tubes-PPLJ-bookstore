@@ -8,3 +8,5 @@
 - testadmpage.py buat halaman depan admin<br />
 - databukupage.py buat halaman utama menampilkan data buku (berisi button-button untuk edit, tambah buku, dan view detail)<br />
 - tambahbuku.py buat halaman untuk menambahkan buku (tapi kayanya mau gw ubah jadi didalem halaman utama aja penambahan bukunya)<br />
+
+nb: segala yg coba ambil data dari json masih pake url contoh, nanti tinggal ubah variabel aja<br />
