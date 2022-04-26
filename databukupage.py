@@ -1,3 +1,4 @@
+from cmath import e
 from itertools import count
 from tkinter import *
 from tkinter import ttk
@@ -177,14 +178,41 @@ class databuku_window:
         delete_book_btn=Button(self.root, text="hapus", font=("Calibri",12),bd=3,fg="black")
         delete_book_btn.place(x=130,y=550,width=120,height=35)
 
-        viewall_book_btn=Button(self.root, text="lihat detail", font=("Calibri",12),bd=3,fg="black")
+        viewall_book_btn=Button(self.root, text="lihat detail", command=self.lihat_detail, font=("Calibri",12),bd=3,fg="black")
         viewall_book_btn.place(x=250,y=550,width=180,height=35)
 
         edit_book_btn=Button(self.root, text="edit", font=("Calibri",12),bd=3,fg="black")
         edit_book_btn.place(x=430,y=550,width=120,height=35)
+
+        self.my_tabel.bind("<ButtonRelease-1>", self.lihat_detail)
     
 
+    def lihat_detail(self):
+        #clear entry boxes
+        self.txt_namabuku.delete(0, END)
+        self.txt_pengarangbuku.delete(0, END)
+        self.txt_penerbitbuku.delete(0, END)
+        self.txt_kategoribuku.delete(0, END)
+        self.txt_bahasabuku.delete(0, END)
+        self.txt_hargabuku.delete(0, END)
+        self.txt_stokbuku.delete(0, END)
 
+        #grab record number
+        selected = self.my_tabel.focus()
+
+        #grab record values
+        values = self.my_tabel.item(selected, 'values')
+
+        #output to entry boxes
+        self.txt_namabuku.insert(0, values[1])
+        self.txt_pengarangbuku.insert(0, values[2])
+        self.txt_penerbitbuku.insert(0, values[3])
+        self.txt_kategoribuku.insert(0, values[4])
+        self.txt_bahasabuku.insert(0, values[5])
+        self.txt_hargabuku.insert(0, values[6])
+        self.txt_stokbuku.insert(0, values[7])
+        
+        
 
     '''def add_new_book(self):
         self.new_window=Toplevel(self.root)
