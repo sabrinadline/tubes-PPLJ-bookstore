@@ -45,10 +45,21 @@ class login_window:
         IDAdmin = self.txtuser.get()
         Password_Admin = self.txtpass.get()
 
-        res = requests.get('https://reqres.in/api/users?page=2')
-        data_request = res.json()
+        #creating dictionary
+        data_admin = {}
+        data_admin['IDAdmin'] = IDAdmin
+        data_admin['Password_Admin'] = Password_Admin
+
+        data_admin_json = open("data_admin.json", "w")
+        res_data_admin = requests.post('http://192.168.10.105:5000/', json=data_admin)
+        json.dump(data_admin,data_admin_json)
+        print(data_admin)
+        print(res_data_admin.text)
+
+        #res = requests.get('192.168.10.105:5000')
+        #data_request = res.json()
         for data in data_request['data']:
-            if IDAdmin == data['first_name'] and Password_Admin == data['last_name']:
+            if IDAdmin == data['IDAdmin'] and Password_Admin == data['Password_Admin']:
                 messagebox.showinfo("Success","Welcome to Admin Page, %s" %(data['first_name']))
                 print('%s berhasil masuk' %(data['first_name']))
             #elif IDAdmin != data['first_name']  or Password_Admin != data['last_name']:

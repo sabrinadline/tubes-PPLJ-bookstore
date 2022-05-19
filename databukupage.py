@@ -1,11 +1,24 @@
-from cmath import e
 from itertools import count
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from tkinter import filedialog
+from tkinter.filedialog import askopenfile 
 
+import json
+import tkinter
+import requests
 import mysql.connector
+
+'''Nama_Buku = StringVar()
+Pengarang_Buku = StringVar()
+Penerbit_Buku = StringVar()
+Kategori_Buku = StringVar()
+Bahasa_Buku = StringVar()
+Harga_Buku = StringVar()
+Stok_Buku = StringVar()
+Deskripsi_Buku = StringVar()'''
 
 class databuku_window:
     def __init__(self,root):
@@ -13,14 +26,14 @@ class databuku_window:
         self.root.title("Data Buku")
         self.root.geometry("1550x800+0+0")
 
-        self.id_buku=StringVar()
+        '''self.id_buku=StringVar()
         self.nama_buku=StringVar()
         self.pengarang_buku=StringVar()
         self.penerbit_buku=StringVar()
         self.kategori_buku=StringVar()
         self.bahasa_buku=StringVar()
         self.harga_buku=StringVar()
-        self.stok_buku=StringVar()
+        self.stok_buku=StringVar()'''
 
 
         #lbltitle = Label(self.root,text="Data Buku",fg="black",font=("Calibri",30,"bold"))
@@ -135,47 +148,75 @@ class databuku_window:
         viewdata_frame.place(x=785, y=30, width=735, height=750)
 
         #form input data
+        label_id_buku=Label(viewdata_frame,text="ID Buku :", fg="black")
+        label_id_buku.place(x=10,y=30)
         label_nama_buku=Label(viewdata_frame,text="Nama Buku :", fg="black")
-        label_nama_buku.place(x=10,y=30)
+        label_nama_buku.place(x=10,y=60)
         label_pengarang_buku=Label(viewdata_frame,text="Pengarang Buku :", fg="black")
-        label_pengarang_buku.place(x=10,y=60)
+        label_pengarang_buku.place(x=10,y=90)
         label_penerbit_buku=Label(viewdata_frame,text="Penerbit Buku :", fg="black")
-        label_penerbit_buku.place(x=10,y=90)
+        label_penerbit_buku.place(x=10,y=120)
         label_kategori_buku=Label(viewdata_frame,text="Kategori Buku :", fg="black")
-        label_kategori_buku.place(x=10,y=120)
+        label_kategori_buku.place(x=10,y=150)
         label_bahasa_buku=Label(viewdata_frame,text="Bahasa Buku :", fg="black")
-        label_bahasa_buku.place(x=10,y=150)
+        label_bahasa_buku.place(x=10,y=180)
         label_harga_buku=Label(viewdata_frame,text="Harga Buku :", fg="black")
-        label_harga_buku.place(x=10,y=180)
+        label_harga_buku.place(x=10,y=210)
         label_stok_buku=Label(viewdata_frame,text="Stok Buku :", fg="black")
-        label_stok_buku.place(x=10,y=210)
+        label_stok_buku.place(x=10,y=240)
         label_deskripsi_buku=Label(viewdata_frame,text="Deskripsi Buku :", fg="black")
-        label_deskripsi_buku.place(x=10,y=240)
+        label_deskripsi_buku.place(x=10,y=270)
 
         #entry boxes
+        self.txt_idbuku=ttk.Entry(viewdata_frame)
+        self.txt_idbuku.place(x=135,y=30,width=550)
         self.txt_namabuku=ttk.Entry(viewdata_frame)
-        self.txt_namabuku.place(x=135,y=30,width=550)
+        self.txt_namabuku.place(x=135,y=60,width=550)
         self.txt_pengarangbuku=ttk.Entry(viewdata_frame)
-        self.txt_pengarangbuku.place(x=135,y=60,width=550)
+        self.txt_pengarangbuku.place(x=135,y=90,width=550)
         self.txt_penerbitbuku=ttk.Entry(viewdata_frame)
-        self.txt_penerbitbuku.place(x=135,y=90,width=550)
+        self.txt_penerbitbuku.place(x=135,y=120,width=550)
         self.txt_kategoribuku=ttk.Entry(viewdata_frame)
-        self.txt_kategoribuku.place(x=135,y=120,width=550)
+        self.txt_kategoribuku.place(x=135,y=150,width=550)
         self.txt_bahasabuku=ttk.Entry(viewdata_frame)
-        self.txt_bahasabuku.place(x=135,y=150,width=550)
+        self.txt_bahasabuku.place(x=135,y=180,width=550)
         self.txt_hargabuku=ttk.Entry(viewdata_frame)
-        self.txt_hargabuku.place(x=135,y=180,width=550)
+        self.txt_hargabuku.place(x=135,y=210,width=550)
         self.txt_stokbuku=ttk.Entry(viewdata_frame)
-        self.txt_stokbuku.place(x=135,y=210,width=550)
+        self.txt_stokbuku.place(x=135,y=240,width=550)
         self.txt_deskripsibuku = Text(viewdata_frame)
-        self.txt_deskripsibuku.place(x=135, y=240, width=550, height=185)
+        self.txt_deskripsibuku.place(x=135, y=270, width=550, height=185)
+
+        def open_file():
+            global img
+            
+            f_types = [('JPG Files', '*.jpg')]
+            filename = filedialog.askopenfilename(filetypes=f_types)
+            #print(filename)
+            img = Image.open(filename)
+            print(filename)
+            resize_image = img.resize((150,200))
+            image1 = ImageTk.PhotoImage(resize_image)
+
+            label1 = tkinter.Label(viewdata_frame, image=image1)
+            label1.image = image1
+
+            #position image
+            label1.place(x=150, y=480)
+
+        label_upld_foto = Label(viewdata_frame, text='Cover buku (jpg):')
+        label_upld_foto.place(x=10, y=480)
+
+        upld_foto_btn = Button(viewdata_frame, text='Choose File', command = lambda:open_file())
+        upld_foto_btn.place(x=10, y=510)
+
 
         #add buttons
         #button tambah buku
-        add_new_book_btn=Button(self.root, text="tambah", font=("Calibri",12),bd=3,fg="black")
+        add_new_book_btn=Button(self.root, text="clear", command=self.clear, font=("Calibri",12),bd=3,fg="black")
         add_new_book_btn.place(x=10,y=550,width=120,height=35)
 
-        delete_book_btn=Button(self.root, text="hapus", font=("Calibri",12),bd=3,fg="black")
+        delete_book_btn=Button(self.root, text="tambah", command=self.tambah_buku, font=("Calibri",12),bd=3,fg="black")
         delete_book_btn.place(x=130,y=550,width=120,height=35)
 
         viewall_book_btn=Button(self.root, text="lihat detail", command=self.lihat_detail, font=("Calibri",12),bd=3,fg="black")
@@ -184,11 +225,13 @@ class databuku_window:
         edit_book_btn=Button(self.root, text="edit", font=("Calibri",12),bd=3,fg="black")
         edit_book_btn.place(x=430,y=550,width=120,height=35)
 
-        self.my_tabel.bind("<ButtonRelease-1>", self.lihat_detail)
-    
-
-    def lihat_detail(self):
+        #self.my_tabel.bind("<ButtonRelease-1>", self.lihat_detail)
+        
+    def clear(self):
         #clear entry boxes
+        self.txt_idbuku.configure(state=NORMAL)
+        self.txt_idbuku.delete(0, END)
+        self.txt_idbuku.configure(state=DISABLED)
         self.txt_namabuku.delete(0, END)
         self.txt_pengarangbuku.delete(0, END)
         self.txt_penerbitbuku.delete(0, END)
@@ -196,6 +239,46 @@ class databuku_window:
         self.txt_bahasabuku.delete(0, END)
         self.txt_hargabuku.delete(0, END)
         self.txt_stokbuku.delete(0, END)
+        #self.txt_deskripsibuku.delete(0, END)
+
+
+    def tambah_buku(self):
+        Nama_Buku = self.txt_namabuku.get()
+        Pengarang_Buku = self.txt_pengarangbuku.get()
+        Penerbit_Buku = self.txt_penerbitbuku.get()
+        Kategori_Buku = self.txt_kategoribuku.get()
+        Bahasa_Buku = self.txt_bahasabuku.get()
+        Harga_Buku = self.txt_hargabuku.get()
+        Stok_Buku = self.txt_stokbuku.get()
+        Deskripsi_Buku = self.txt_deskripsibuku.get(1.0, END)
+
+        #creating dictionary
+        data_tambah_buku = {}
+        data_tambah_buku['Nama_Buku'] = Nama_Buku
+        data_tambah_buku['Pengarang_Buku'] = Pengarang_Buku
+        data_tambah_buku['Penerbit_Buku'] = Penerbit_Buku
+        data_tambah_buku['Kategori_Buku'] = Kategori_Buku
+        data_tambah_buku['Bahasa_Buku'] = Bahasa_Buku
+        data_tambah_buku['Harga_Buku'] = Harga_Buku
+        data_tambah_buku['Stok_Buku'] = Stok_Buku
+        data_tambah_buku['Deskripsi_Buku'] = Deskripsi_Buku
+
+        out_file = open("data_tambah_buku.json", "w")
+        json.dump(data_tambah_buku,out_file)
+        print(data_tambah_buku)
+
+    def lihat_detail(self):
+        #clear entry boxes
+        self.txt_idbuku.configure(state=NORMAL)
+        self.txt_idbuku.delete(0, END)
+        self.txt_namabuku.delete(0, END)
+        self.txt_pengarangbuku.delete(0, END)
+        self.txt_penerbitbuku.delete(0, END)
+        self.txt_kategoribuku.delete(0, END)
+        self.txt_bahasabuku.delete(0, END)
+        self.txt_hargabuku.delete(0, END)
+        self.txt_stokbuku.delete(0, END)
+        #self.txt_deskripsibuku.delete(0, END)
 
         #grab record number
         selected = self.my_tabel.focus()
@@ -204,6 +287,8 @@ class databuku_window:
         values = self.my_tabel.item(selected, 'values')
 
         #output to entry boxes
+        self.txt_idbuku.insert(0, values[0])
+        self.txt_idbuku.configure(state=DISABLED)
         self.txt_namabuku.insert(0, values[1])
         self.txt_pengarangbuku.insert(0, values[2])
         self.txt_penerbitbuku.insert(0, values[3])
